@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>个人简介</title>
+	<link rel="stylesheet" href="css/animate.min.css">
+	<style type="text/css">
+		/*重置样式*/
+		*{
+			margin:0;
+			padding:0;
+		}
+		html,body{
+			height:100%;
+			box-sizing: border-box;
+			outline: none;
+		}
+		/*公共部分*/
+		#wrap{
+			max-width: 420px;
+			min-width: 300px;
+			height:600px;
+			margin:0 auto;
+			position: relative;
+			/*overflow: hidden;*/
+		}
+		/*动画播放次数：循环播放*/
+		.infinite{animation-iteration-count:infinite;}
+		/*延迟时间*/
+		.delay-time{animation-delay:0.8s;}
+		/*分屏页隐藏*/
+		.hide{display: none;}
+		/*分页控制*/
+		.pageDown{transform: translateY(100%);}
+		.pageUp{transform: translateY(-100%);}
+		/*分屏样式*/
+		.page{
+			width: 100%;
+			height:100%;	
+			display: flex;
+			flex-direction: column;
+			align-items:center;
+			justify-content: center;
+			position: absolute;
+			top:0;
+			left:0;
+			transition: all 0.8s;
+		}
+		.page1{background-color: #db3300;}
+		.page2{background-color: #ccf;}
+		.page3{background-color: #66ff63;}
+		.page4{background-color: #f06;}
+		p{line-height: 40px;}
+		.music{
+			position: absolute;
+			top:10px;
+			right:10px;
+			z-index: 1000;
+		}
+	</style>
+</head>
+<body>
+	<div id="wrap">
+		<!-- 音乐按钮 -->
+		<div class="music">
+			<img id="music_btn" class="animated rotateOut infinite" src="images/music.png">
+			<audio id="music_bg" src="source/WeBelieve.mp3" autoplay></audio>
+		</div>
+		<!-- 个人信息 -->
+		<div class="page page1 ">
+			<p class="delay-time animated rotateIn">第一页</p>
+			<p>姓名：杜佳男</p>
+			<p>年龄：27</p>
+			<p>地址：秦皇岛</p>
+		</div>
+		<!-- 生活日常 -->
+		<div class="page page2 pageDown">
+			<p class="delay-time hide animated rotateIn ">第二页</p>
+			<p>日常</p>
+			<p>日常照片</p>
+		</div>
+		<!-- 项目展示 -->
+		<div class="page page3 pageDown">
+			<p class="delay-time hide animated rotateIn ">第三页</p>
+			<p>作品展示</p>
+			<p>作品一</p>
+			<p>作品二</p>
+			<p>作品三</p>
+			<p>作品四</p>
+		</div>
+		<!-- 联系方式 -->
+		<div class="page page4 pageDown">
+			<p class="delay-time hide animated rotateIn ">第四页</p>
+			<p>联系方式</p>
+			<p>谢谢！</p>
+		</div>
+	</div>
+</body>
+<script type="text/javascript" src="js/zepto.min.js">
+</script>
+<script type="text/javascript" src="js/touch-0.2.14.min.js">
+</script>
+<script type="text/javascript" src="js/fx.js"></script>
+<script type="text/javascript">
+	
+window.onload = function(){
+	// 音乐开关
+	var MUS=$('#music_bg').get(0);//转化成JQ
+
+	touch.on('#music_btn','tap',function(){
+		if(	MUS.paused){
+
+			$("#music_btn").addClass("animated");
+
+			MUS.play();	
+		}else{
+
+			$("#music_btn").removeClass("animated");
+
+			MUS.pause();
+	
+		}
+	})
+
+
+
+
+
+
+
+	/*
+		1.上下滑屏效果
+		2.当滑动第一页时，添加pageUp
+		3.此时第二页还有pageDown,移除pageDown
+
+	*/
+
+	//给页数一个初始化 
+	var pageIndex = 0 ; //第一页为索引为 0
+	//获取所有页数的索引
+	var pageNum = $(".page").length-1;//总页数的索引值 
+		//$(".page").length 先获取总页数 4
+		//$(".page").length -1 索引值 0 1 2 3 
+		console.log(pageNum);
+
+	// 滑屏效果
+
+
+	//给 #wrap swipeup 向上滑动事件，执行一个函数
+	touch.on('#wrap','swipeup',function(){
+
+
+		//当前屏的索引大于总索引时 终止向上滑动效果
+		if(pageIndex < pageNum){
+
+			//取当前屏幕中的page，执行向上动画 
+			$(".page").eq(pageIndex).addClass('pageUp');
+			$(".page").eq(pageIndex).find('p').addClass('hide');
+			// 当第一屏滑上之后,pageIndex+1,索引值增加了
+			pageIndex = pageIndex + 1;
+
+			// 下面的屏移除pageDomn
+			$(".page").eq(pageIndex).removeClass('pageDown');
+			$(".page").eq(pageIndex).find('p').removeClass('hide')
+		}
+
+
+
+	})
+	//向下滑动
+	touch.on('#wrap','swipedown',function(){
+
+		if(pageIndex > 0){		
+			$(".page").eq(pageIndex).addClass('pageDown');
+			$(".page").eq(pageIndex).find('p').addClass('hide');
+			pageIndex = pageIndex - 1;
+			$(".page").eq(pageIndex).removeClass('pageUp');
+			$(".page").eq(pageIndex).find('p').removeClass('hide')
+		}
+
+	})
+}
+
+
+
+
+
+
+
+</script>
+</html>
